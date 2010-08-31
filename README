@@ -1,10 +1,57 @@
 # ants
 
-FIXME: write description
+Ants demo from clojure-intro talk.
+A more modular version of the ants demo adapted to run
+on clojure 1.2
+
+Illustrates the refs: the process that draws the UI must find a consistent snapshot of the "ant world". This is actually a
+hard problem to do with good concurrency. With STM it is easy,
+start a transaction read all refs. Then in your own time, draw
+the gui (outside the transaction).
 
 ## Usage
 
-FIXME: write
+I use lein 1.3.0 (http://github.com/technomancy/leiningen)
+Swank Clojure 1.3.0-snapshot (http://github.com/technomancy/swank-clojure)
+Emacs (AquaMacs for MacOSX) and slime (see Connecting with SLIME on the swank clojure site).
+
+From command prompt:
+krukow:~/Projects/clojure/ants$       lein swank
+Listening for transport dt_socket at address: 8030
+user=> Connection opened on local port  4005
+#<ServerSocket ServerSocket[addr=localhost/127.0.0.1,port=0,localport=4005]>
+
+Start up Emacs and run M-x slime-connect (enter-enter-yes)
+
+Open src/ants/ui.clj
+Compile C-c C-k
+
+In repl: 
+user> (in-ns 'ants.ui)
+#<Namespace ants.ui>
+ants.ui> (def ants (w/setup))
+#'ants.ui/ants
+ants.ui> (start-anim)
+#<Agent@4a15d117: nil>
+ants.ui> (dorun (map #(send-off % b/behave) ants))
+nil
+ants.ui> (send-off evaporator evaporation)
+#<Agent@50e07360: nil>
+ants.ui> 
+
+
+You can interactively change stuff. Try
+
+ants.ui> (def scale 10)
+#'ants.ui/scale
+
+to stop:
+ants.ui> (in-ns 'ants.behaviour)
+#<Namespace ants.behaviour>
+ants.behaviour> (def running false)
+#'ants.behaviour/running
+ants.behaviour> 
+(or kill lein swank).
 
 ## Installation
 
